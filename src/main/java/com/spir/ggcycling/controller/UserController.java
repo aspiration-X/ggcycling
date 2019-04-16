@@ -6,16 +6,14 @@ import com.spir.ggcycling.bean.oResult;
 import com.spir.ggcycling.bean.User;
 import com.spir.ggcycling.bean.Vo;
 import com.spir.ggcycling.service.UserService;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
@@ -36,19 +34,14 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @RequestMapping("home")
-    public String queryNews(Model model){
-        List<News> newsList =  userService.queryNews();
-        List<Vo> vos = new ArrayList<>();
-        for (News news : newsList) {
-            vos.add(new Vo(news,news.getUser(),news.getLikeCount()));
-        }
-        model.addAttribute("vos",vos);
-        model.addAttribute("contextPath",contextPath);
-        return "home";
-    }
-
-
+    /**
+     * 注册
+     * @param username
+     * @param password
+     * @param model
+     * @param session
+     * @return
+     */
     @RequestMapping("/register")
     @ResponseBody
     @Transactional
@@ -56,6 +49,8 @@ public class UserController {
         User user = new User();
         user.setName(username);
         user.setPassword(password);
+        String headUrl = "https://ggcycling.oss-cn-hangzhou.aliyuncs.com/headimage/"+ ((int)(Math.random()*5)+1) +".jpeg";
+        user.setHeadUrl(headUrl);
         boolean b = userService.addUser(user);
         if(b){
             model.addAttribute("user",user);
@@ -64,6 +59,14 @@ public class UserController {
         return failStatus();
     }
 
+    /**
+     * 登录
+     * @param username
+     * @param password
+     * @param model
+     * @param session
+     * @return
+     */
     @RequestMapping("/login")
     @ResponseBody
     public oResult login (String username, String password, Model model, HttpSession session){
@@ -79,14 +82,34 @@ public class UserController {
         return failStatus();
     }
 
+    /**
+     * 注销
+     * @param session
+     * @return
+     */
     @RequestMapping("logout")
     public ModelAndView logout(HttpSession session){
         if(session != null & session.getAttribute("user") != null) {
             session.removeAttribute("user");
         }
         return new ModelAndView("redirect:/home");
-
     }
+
+    /**
+     * 显示个人详情
+     * @param userId
+     * @param model
+     * @return
+     */
+    @RequestMapping("user/{userId}")
+    public String userInfo(@PathVariable int userId ,Model model){
+        User user = userService.queryUserByUserId(userId);
+        model.addAttribute("contextPath",contextPath);
+        model.addAttribute("user",user);
+        return "personal";
+    }
+
+
 
     public oResult successfulStuatus(){
         return new oResult(0,"注册成功");

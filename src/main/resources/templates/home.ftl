@@ -50,7 +50,7 @@
                     </div>
                     <div class="user-info">
                         <div class="user-avatar">
-                            <a href="${contextPath!}/user/$!{vo.user.id}/"><img width="32" class="img-circle" src="${vo.user.headUrl}"></a>
+                            <a href="${contextPath!}/user/${vo.user.id!}/"><img width="32" class="img-circle" src="${vo.user.headUrl}"></a>
                         </div>
 
 

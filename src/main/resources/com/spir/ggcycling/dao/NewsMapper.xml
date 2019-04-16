@@ -17,6 +17,12 @@
     <result column="uname" property="name"/>
     <result column="head_url" property="headUrl"/>
   </resultMap>
+
+    <resultMap id="UserIdAndUserName" type="user">
+        <result column="uid" property="id"/>
+        <result column="uname" property="name"/>
+        <result column="uhead_url" property="headUrl"/>
+    </resultMap>
   <sql id="Base_Column_List">
     n.id, n.title, n.link, n.image, n.like_count, n.comment_count, n.created_date, n.user_id
   </sql>
@@ -143,4 +149,30 @@ select
     from news_gg n LEFT JOIN user_gg u on n.user_id = u.id
 
   </select>
+
+
+  <!--查找单个News-->
+  <select id="querySingleNews" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>,<include refid="User_Column_List"/>
+    from news_gg n LEFT JOIN user_gg u on n.user_id = u.id
+    <where>
+      n.id = #{newsId}
+    </where>
+  </select>
+
+<!--new、user多表查询：通过新闻的Id查找分享该新闻的用户-->
+    <select id="queryUserByNewsId" resultMap="UserIdAndUserName">
+        select
+        u.id as uid,
+        u.name as uname,
+        u.head_url as uhead_url,
+        n.id as nid
+        from
+        news_gg n left join user_gg u
+        on n.user_id = u.id
+        <where>
+            n.id = #{newsId}
+        </where>
+    </select>
 </mapper>

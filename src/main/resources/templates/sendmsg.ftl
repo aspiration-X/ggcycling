@@ -59,7 +59,7 @@
 
         var elementById = document.getElementById("msg_to");
         var to=elementById.value;
-        var elementById2 = document.getElementById("msg_content");
+        var elementById2 = document.getElementById("mock:k");
         var content=elementById2.innerText;
         //alert(content)
 
@@ -69,13 +69,13 @@
         $.ajax(
             {
                 type:"POST",
-                url:"/user/msg/addMessage",
+                url:"/ggcycling/user/msg/addMessage",
                 data: 'toName='+to+'&&content='+content ,
                 success:function(data){
                     //alert(data)
-                    var dataobj = eval('(' + data + ')');
-                    //alert(dataobj.code)
-                    //alert(dataobj.msg)
+                    var dataobj = data;
+                    alert(dataobj.code)
+                    alert(dataobj.msg)
 
                     if (dataobj.code == '1') {
                         errtag.innerText=dataobj.msg

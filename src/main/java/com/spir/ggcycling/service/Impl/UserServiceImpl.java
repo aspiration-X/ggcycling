@@ -46,4 +46,14 @@ public class UserServiceImpl implements UserService {
 
         return userMapper.verifyUser( user);
     }
+
+    @Override
+    public User queryUserByUserId(Integer userId) {
+        return userMapper.selectByPrimaryKey(userId);
+    }
+
+    @Override
+    public User queryUserByName(String toName) {
+        return userMapper.queryUserByName(toName);
+    }
 }

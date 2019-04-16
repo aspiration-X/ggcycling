@@ -28,4 +28,8 @@ public interface UserService {
     int registerUser(String username, String password);
 
     User verifyUser(User user);
+
+    User queryUserByUserId(Integer userId);
+
+    User queryUserByName(String toName);
 }

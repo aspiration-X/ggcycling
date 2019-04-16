@@ -99,22 +99,13 @@
     </selectKey>
 
     insert into user_gg
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="name != null">
-        name,
-      </if>
-      <if test="password != null">
-        password,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null">
-        #{password,jdbcType=VARCHAR},
-      </if>
-    </trim>
+    (name,password,head_url)
+    values(
+    #{name,jdbcType=VARCHAR},
+    #{password,jdbcType=VARCHAR},
+    #{headUrl}
+    )
+
   </insert>
 
   <insert id="registerUser" parameterType="user">
@@ -151,4 +142,12 @@
       u.password = #{user.password}
     </where>
   </select>
+
+
+    <select id="queryUserByName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user_gg
+        where name = #{name}
+    </select>
 </mapper>

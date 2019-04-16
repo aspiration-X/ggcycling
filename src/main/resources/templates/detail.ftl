@@ -9,7 +9,7 @@
                 <#else>
                 <button class="click-like up" data-id="${news.id}" title="赞同"><i class="vote-arrow"></i><span class="count">${news.likeCount!}</span></button>
                 </#if>
-                <#if like gt 0>
+                <#if like lt 0>
                 <button class="click-dislike down pressed" data-id="${news.id}" title="反对"><i class="vote-arrow"></i></button>
                 <#else>
                 <button class="click-dislike down" data-id="${news.id}" title="反对"><i class="vote-arrow"></i></button>
@@ -69,13 +69,13 @@
             </form>
             <#else>
             <div class="login-actions">
-                <a class="btn btn-success" href="${contextPath}/?pop=1">登录后评论</a>
+                <a class="btn btn-success" href="${contextPath}/home/?pop=1">登录后评论</a>
             </div>
             </#if>
         </div>
 
         <div id="comments" class="comments">
-            <#list  comments as commentvo >
+            <#list  commentVos as commentvo >
             <div class="media">
                 <a class="media-left" href="${contextPath}/user/${commentvo.user.id!}">
                     <img src="${commentvo.user.headUrl!}">

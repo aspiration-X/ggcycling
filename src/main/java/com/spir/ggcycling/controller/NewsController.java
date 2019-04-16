@@ -2,8 +2,10 @@ package com.spir.ggcycling.controller;
 
 import com.spir.ggcycling.bean.News;
 import com.spir.ggcycling.bean.User;
+import com.spir.ggcycling.service.MessageService;
 import com.spir.ggcycling.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -12,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
+
 
 /**
  * created by spir
@@ -22,7 +25,16 @@ public class NewsController {
 
     @Autowired
     NewsService newsService;
+    @Autowired
+    MessageService messageService;
+    @Value("${server.servlet.context-path}")
+    String contextPath;
 
+    /**
+     * 上传图片
+     * @param file
+     * @return
+     */
     @RequestMapping("/uploadImage")
     @ResponseBody
     public HashMap uploadImage(MultipartFile file){
@@ -40,6 +52,13 @@ public class NewsController {
         }
         return map;
     }
+
+    /**
+     * 提交分享的新闻
+     * @param news
+     * @param session
+     * @return
+     */
     @RequestMapping("user/addNews")
     @ResponseBody
     public HashMap addNews(News news, HttpSession session){
@@ -56,32 +75,9 @@ public class NewsController {
         return map;
     }
 
-   /* @RequestMapping("/news/{newsId}")
-    public String*/
 
-    @RequestMapping("/like")
-    @ResponseBody
-    public HashMap like(int newsId,HttpSession session){
-        HashMap map = new HashMap();
-        User user = (User) session.getAttribute("user");
-        int userId = user.getId();
-        String msg = newsService.like(String.valueOf(newsId),String.valueOf(userId));
-        map.put("code",0);
-        map.put("msg",msg);
-        return map;
-    }
 
-    @RequestMapping("/dislike")
-    @ResponseBody
-    public HashMap dislike(int newsId,HttpSession session){
-        HashMap map = new HashMap();
-        User user = (User) session.getAttribute("user");
-        int userId = user.getId();
-        String msg = newsService.dislike(String.valueOf(newsId),String.valueOf(userId));
-        map.put("code",0);
-        map.put("msg",msg);
-        return map;
-    }
+
 
 
 

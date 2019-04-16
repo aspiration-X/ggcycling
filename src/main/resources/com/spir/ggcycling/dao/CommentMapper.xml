@@ -130,4 +130,28 @@
       status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+
+
+
+
+  <!--查询新闻评论-->
+  <select id="queryAllComments" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from comment
+    where entity_id = #{newsId} and entity_type = #{news}
+  </select>
+
+  <!--提交新闻评论-->
+  <insert id="addCommentForNewsId" >
+   insert into comment ( user_id, entity_id,
+      entity_type, created_date, status,
+      content)
+    values ( #{userId}, #{entityId},
+      #{entityType}, #{createdDate}, 0,
+      #{content})
+  </insert>
 </mapper>

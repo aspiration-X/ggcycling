@@ -1,7 +1,10 @@
 package com.spir.ggcycling.service.Impl;
 
 import com.aliyun.oss.OSSClient;
+import com.spir.ggcycling.bean.Comment;
 import com.spir.ggcycling.bean.News;
+import com.spir.ggcycling.bean.User;
+import com.spir.ggcycling.dao.CommentMapper;
 import com.spir.ggcycling.dao.NewsMapper;
 import com.spir.ggcycling.service.NewsService;
 import com.spir.ggcycling.utils.JedisUtils;
@@ -15,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -26,7 +30,15 @@ public class NewsServiceImpl implements NewsService {
 
     @Autowired
     NewsMapper newsMapper;
+    @Autowired
+    CommentMapper commentMapper;
 
+    /**
+     * 上传的我的阿里云
+     * @param file
+     * @return
+     * @throws IOException
+     */
     @Override
     public String saveImage(MultipartFile file) throws IOException {
         String bucketName = "ggcycling";
@@ -39,7 +51,7 @@ public class NewsServiceImpl implements NewsService {
 // 创建OSSClient实例。
         OSSClient ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
 
-        //key是上传的该文件的唯一标识，通常需要加uuid
+        //key是上传的该文件的唯一标识，通常需要加uuid（spir自己写的，防止上传的文件重名）
         String key = UUID.randomUUID().toString().replace("-","")+file.getOriginalFilename();
 
 
@@ -63,23 +75,57 @@ public class NewsServiceImpl implements NewsService {
     }
 
 
+
+    /**
+     * 用nosql数据库redis，采用set数据结构（不能保存重复元素）,map里的value是set集合
+     * @param newsId key
+     * @param userId value
+     * @return
+     */
     @Override
     public String like(String  newsId,String  userId) {
         Jedis jedis = JedisUtils.getJedisFromPool();
         Long sadd = jedis.sadd(newsId, userId);
-        LoggerFactory.getLogger(getClass()).info("userId为：" + userId + "赞了" + "newsId为：" + newsId);
+        LoggerFactory.getLogger(getClass()).info("userId为：" + userId + "的用户赞了" + "newsId为：" + newsId);//打印日志
+        Long scard = jedis.scard(newsId);//查询newsId对应的value里有多少个数据
+        jedis.close();
+        return String.valueOf(scard);
+    }
+
+    /**
+     * 采用redise nosql数据库
+     * @param newsId
+     * @param userId
+     * @return
+     */
+    @Override
+    public String dislike(String newsId, String userId) {
+        Jedis jedis = JedisUtils.getJedisFromPool();
+        jedis.srem(newsId,userId);
+        LoggerFactory.getLogger(getClass()).info("userId为：" + userId + "的用户踩了" + "newsId为：" + newsId);
         Long scard = jedis.scard(newsId);
         jedis.close();
         return String.valueOf(scard);
     }
 
     @Override
-    public String dislike(String newsId, String userId) {
+    public News querySingleNews(int newsId) {
+        return newsMapper.querySingleNews(newsId);
+
+    }
+
+    @Override
+    public String queryLikeCount(String  newsId,String  userId) {
         Jedis jedis = JedisUtils.getJedisFromPool();
-        jedis.srem(newsId,userId);
-        LoggerFactory.getLogger(getClass()).info("userId为：" + userId + "踩了了" + "newsId为：" + newsId);
         Long scard = jedis.scard(newsId);
         jedis.close();
         return String.valueOf(scard);
     }
+
+    @Override
+    public User queryUserByNewsId(int newsId) {
+        return newsMapper.queryUserByNewsId(newsId);
+    }
+
+
 }

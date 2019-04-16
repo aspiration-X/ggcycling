@@ -4,15 +4,15 @@
             <ul class="letter-list">
                 <#list  conversations as conversation >
                 <li id="conversation-item-10005_622873">
-                    <a class="letter-link" href="${contextPath}/msg/detail?conversationId=${conversation.conversation.conversationId!}"></a>
+                    <a class="letter-link" href="${contextPath}/msg/detail?conversationId=${conversation.conversationId!}"></a>
                     <div class="letter-info">
-                        <span class="l-time">${conversation.conversation.createdDate?string('yyyy-MM-dd HH:mm:ss')}</span>
+                        <span class="l-time">${conversation.createdDate?string('yyyy-MM-dd HH:mm:ss')}</span>
                         <div class="l-operate-bar">
                             <a href="javascript:void(0);" class="sns-action-del" data-id="10005_622873">
                             删除
                             </a>
-                            <a href="${contextPath}/msg/detail?conversationId=${conversation.conversation.conversationId!}">
-                                共${conversation.conversation.id!}条会话
+                            <a href="${contextPath}/msg/detail?conversationId=${conversation.conversationId!}">
+                                共${conversation.count!}条会话
                             </a>
                         </div>
                     </div>
@@ -20,7 +20,7 @@
                         <span class="msg-num">
                             ${conversation.unread!}
                         </span>
-                        <a class="list-head" href="${contextPath}/user/${conversation.user.id!}">
+                        <a class="list-head" href="${contextPath}/user/${conversation.user.id!}"><#--user是message中的from_id-->
                             <img alt="头像" src="${conversation.user.headUrl!}">
                         </a>
                     </div>
@@ -29,8 +29,8 @@
                             ${conversation.user.name!}
                         </a>
                         <p class="letter-brief">
-                            <a href="${contextPath}/msg/detail?conversationId=${conversation.conversation.conversationId!}">
-                                ${conversation.conversation.content!}
+                            <a href="${contextPath}/msg/detail?conversationId=${conversation.conversationId!}">
+                                ${conversation.content!}
                             </a>
                         </p>
                     </div>

@@ -31,4 +31,6 @@ public interface UserMapper {
     int registerUser(@Param("name") String username, @Param("password") String password);
 
     User verifyUser(@Param("user") User user);
+
+    User queryUserByName(@Param("name")String toName);
 }
