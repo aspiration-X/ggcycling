@@ -1,7 +1,9 @@
 package com.spir.ggcycling.dao;
 
 import com.spir.ggcycling.bean.Message;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.Date;
 import java.util.List;
@@ -38,4 +40,7 @@ public interface MessageMapper {
      * @return 这些message的list集合
      */
     List<Message> queryOneGroupMessageByConversation(String conversationId);
+
+    @Delete("delete from message where conversation_id = #{conversationId}")
+    void deleteByConversationId(String conversationId);
 }

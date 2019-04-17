@@ -8,7 +8,7 @@
                     <div class="letter-info">
                         <span class="l-time">${conversation.createdDate?string('yyyy-MM-dd HH:mm:ss')}</span>
                         <div class="l-operate-bar">
-                            <a href="javascript:void(0);" class="sns-action-del" data-id="10005_622873">
+                            <a href="${contextPath}/msg/delConversation?conversationId=${conversation.conversationId!}" class="sns-action-del" data-id="10005_622873">
                             删除
                             </a>
                             <a href="${contextPath}/msg/detail?conversationId=${conversation.conversationId!}">
@@ -21,7 +21,7 @@
                             ${conversation.unread!}
                         </span>
                         <a class="list-head" href="${contextPath}/user/${conversation.user.id!}"><#--user是message中的from_id-->
-                            <img alt="头像" src="${conversation.user.headUrl!}">
+                            <img alt="头像" src="${conversation.user.headUrl!}?x-oss-process=image/resize,w_70">
                         </a>
                     </div>
                     <div class="letter-detail">

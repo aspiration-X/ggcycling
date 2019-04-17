@@ -36,4 +36,14 @@ public class MessageServiceImpl implements MessageService {
     public List<Message> queryOneGroupMessageByConversation(String conversationId) {
         return messageMapper.queryOneGroupMessageByConversation(conversationId);
     }
+
+    @Override
+    public void removeOneMessage(int id) {
+        messageMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public void removeConversationByConversationId(String conversationId) {
+        messageMapper.deleteByConversationId(conversationId);
+    }
 }

@@ -61,6 +61,25 @@ public class MessageController {
         return "letterDetail";
     }
 
+    /**
+     * 删除单个站内信信息
+     * @param id 该message主键id
+     * @param conversationId
+     * @param model
+     * @return
+     */
+    @RequestMapping("msg/delLink")
+    public String messageDelLink( int id,String conversationId,Model model){
+        messageService.removeOneMessage(id);
+        return messageDetail(conversationId,model);
+    }
+
+    @RequestMapping("msg/delConversation")
+    public String messageDelConversation(String conversationId,Model model,HttpSession session){
+        messageService.removeConversationByConversationId(conversationId);
+        return messageList(model,session);
+    }
+
 
     /**
      * 点击发送私信，转到该页面

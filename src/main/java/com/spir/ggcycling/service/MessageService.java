@@ -31,4 +31,8 @@ public interface MessageService {
      * @return 这些message的list集合
      */
     List<Message> queryOneGroupMessageByConversation(String conversationId);
+
+    void removeOneMessage(int id);
+
+    void removeConversationByConversationId(String conversationId);
 }

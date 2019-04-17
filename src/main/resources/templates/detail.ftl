@@ -18,7 +18,7 @@
 
             <div class="content">
                 <div class="content-img">
-                    <img src="${news.image!}" alt="">
+                    <img src="${news.image!}?x-oss-process=image/resize,w_70" alt="">
                 </div>
                 <div class="content-main">
                     <h3 class="title">
